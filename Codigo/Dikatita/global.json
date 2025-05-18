@@ -1,0 +1,6 @@
+{
+    "projects": [ "src", "test" ],
+    "sdk": {
+        "version": "9.0.200"
+    }
+}

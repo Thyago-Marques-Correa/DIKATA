@@ -1,0 +1,53 @@
+﻿@model IEnumerable<ProdutoViewModel>
+
+<table class="table data-table table-bordered table-hover table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataCadastro)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Valor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ativo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QuantidadeEstoque)
+        </th>
+        <th class="nosort">Ações</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataCadastro)
+            </td>
+            <td>
+                @item.Valor.ToString("C")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ativo)
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuantidadeEstoque)
+            </td>
+            <td class="text-right">
+                <a class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="Detalhes"
+                   asp-controller="Produto" asp-action="Detalhes" asp-route-id="@item.Id">Detalhes</a>
+                <a class="btn btn-warning btn-sm" data-toggle="tooltip" data-placement="top" title="Editar"
+                   asp-controller="Produto" asp-action="Editar" asp-route-id="@item.Id">Editar</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

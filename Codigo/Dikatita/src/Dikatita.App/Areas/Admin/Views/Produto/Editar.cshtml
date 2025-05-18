@@ -1,0 +1,90 @@
+﻿@model ProdutoViewModel
+
+@{
+    ViewData["Title"] = "Edição de Produto";
+}
+
+<div class="container py-4">
+    <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+    <hr />
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-sm rounded-4 p-4">
+                <form asp-action="Editar" enctype="multipart/form-data">
+                    <vc:summary></vc:summary>
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="mb-3">
+                        <label asp-for="Nome" class="form-label fw-semibold"></label>
+                        <input asp-for="Nome" class="form-control" />
+                        <span asp-validation-for="Nome" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3 text-center">
+                        <label class="form-label fw-semibold">Imagem Atual</label><br />
+                        <img src="~/uploadImagens/@Model.Imagem"
+                             alt="Imagem do Produto"
+                             class="img-fluid rounded-3"
+                             style="max-width: 150px; height: auto;" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Descricao" class="form-label fw-semibold"></label>
+                        <textarea asp-for="Descricao" rows="4" class="form-control"></textarea>
+                        <span asp-validation-for="Descricao" class="text-danger"></span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Valor" class="form-label fw-semibold"></label>
+                            <input asp-for="Valor" class="form-control" />
+                            <span asp-validation-for="Valor" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="QuantidadeEstoque" class="form-label fw-semibold"></label>
+                            <input asp-for="QuantidadeEstoque" class="form-control" />
+                            <span asp-validation-for="QuantidadeEstoque" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" asp-for="Ativo" id="ativoCheckbox" />
+                        <label class="form-check-label fw-semibold" for="ativoCheckbox">
+                            @Html.DisplayNameFor(model => model.Ativo)
+                        </label>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <input type="submit" value="Salvar" class="btn btn-success rounded-pill px-4" />
+                        <a href="javascript:window.history.back();" class="btn btn-outline-secondary rounded-pill px-4">
+                            Voltar
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $("#ImagemUpload").attr("data-val", "false");
+            $("#ImagemUpload").rules("remove", "required");
+        });
+
+        $("#ImagemUpload").change(function () {
+            $("#img_none")[0].style.display = 'none';
+
+            if (this.files.length > 0) {
+                $("#img_none").text(this.files[0].name);
+                $("#img_none")[0].style.display = 'block';
+            }
+        });
+    </script>
+}

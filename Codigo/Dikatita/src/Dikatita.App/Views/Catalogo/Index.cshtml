@@ -1,0 +1,19 @@
+﻿@model IEnumerable<ProdutoViewModel>
+
+@{
+    ViewData["Title"] = "Catálogo de Produtos";
+}
+
+<h1>@ViewData["Title"]</h1>
+<vc:summary></vc:summary>
+<br />
+<partial name="_ListaProdutos"/>
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

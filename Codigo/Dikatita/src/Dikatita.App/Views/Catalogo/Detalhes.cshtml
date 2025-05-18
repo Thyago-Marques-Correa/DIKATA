@@ -1,0 +1,148 @@
+﻿@model ProdutoViewModel
+
+@{
+    ViewData["Title"] = "Detalhe do Produto - " + Model.Nome;
+}
+
+<div class="container mt-5">
+    <h4 class="text-center mb-4">@ViewData["Title"]</h4>
+    <hr />
+
+    <div class="row">
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm">
+                @if (!string.IsNullOrEmpty(Model.Imagem))
+                {
+                    <img src="~/uploadImagens/@Model.Imagem" alt="@Model.Nome" class="card-img-top product-image" style="width: 100%; height: auto; object-fit: cover;" />
+                }
+                else
+                {
+                    <div class="card-body text-center">
+                        <p class="text-muted">Imagem não disponível</p>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm p-4">
+                <dl class="row">
+                    <dt class="col-sm-3 text-muted">Nome:</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Nome)</dd>
+
+                    <dt class="col-sm-3 text-muted">Descrição:</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Descricao)</dd>
+
+                    <dt class="col-sm-3 text-muted">Preço:</dt>
+                    <dd class="col-sm-9">@Model.Valor.ToString("C")</dd>
+
+                    <dt class="col-sm-3 text-muted">Estoque:</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.QuantidadeEstoque) unidades</dd>
+
+                    <dt class="col-sm-3 text-muted">Cadastro:</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.DataCadastro)</dd>
+
+                    <dt class="col-sm-3 text-muted">Status:</dt>
+                    <dd class="col-sm-9">
+                        @if (Model.Ativo)
+                        {
+                            <span class="badge bg-success">Ativo</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Inativo</span>
+                        }
+                    </dd>
+                </dl>
+
+                <form id="addToCartForm">
+                    <input type="hidden" name="produtoId" value="@Model.Id" />
+                    <input type="hidden" name="produtoNome" value="@Model.Nome" />
+                    <input type="hidden" name="produtoPreco" value="@Model.Valor" />
+                    <input type="hidden" name="produtoImagem" value="@Model.Imagem" />
+                    <div class="d-flex gap-2 align-items-center mt-4">
+                        <label for="quantidade" class="me-2">Quantidade:</label>
+                        <input type="number" id="quantidade" name="quantidade" class="form-control w-auto" value="1" min="1" max="@Model.QuantidadeEstoque" />
+
+                        <button type="button" class="btn btn-warning adicionar-ao-carrinho"
+                                data-produto-id="@Model.Id"
+                                data-produto-nome="@Model.Nome"
+                                data-produto-preco="@Model.Valor"
+                                data-produto-imagem="@Model.Imagem">
+                            Adicionar ao Carrinho
+                        </button>
+                        <a class="btn btn-secondary" href="javascript:window.history.back();">Voltar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            function obterCarrinho() {
+                const carrinhoCookie = document.cookie.split('; ').find(row => row.startsWith('carrinho='));
+                return carrinhoCookie ? JSON.parse(decodeURIComponent(carrinhoCookie.split('=')[1])) : [];
+            }
+
+            function salvarCarrinho(carrinho) {
+                const carrinhoSerializado = encodeURIComponent(JSON.stringify(carrinho));
+                document.cookie = `carrinho=${carrinhoSerializado}; path=/; max-age=${60 * 60 * 24 * 7}`;
+            }
+
+            function adicionarAoCarrinho(produto) {
+                let carrinho = obterCarrinho();
+
+                const produtoExistente = carrinho.find(item => item.produtoId === produto.produtoId);
+                if (produtoExistente) {
+                    produtoExistente.quantidade += produto.quantidade;
+                } else {
+                    carrinho.push({
+                        produtoId: produto.produtoId,
+                        nome: produto.nome,
+                        preco: produto.preco,
+                        imagem: `/uploadImagens/${produto.imagem}`,
+                        quantidade: produto.quantidade
+                    });
+                }
+
+                salvarCarrinho(carrinho);
+
+                const notificacao = document.createElement('div');
+                notificacao.className = 'alert alert-success position-fixed bottom-0 end-0 m-3';
+                notificacao.style.zIndex = '1000';
+                notificacao.textContent = `Adicionado ${produto.quantidade} item(ns) ao carrinho!`;
+                document.body.appendChild(notificacao);
+
+                setTimeout(() => {
+                    notificacao.remove();
+                }, 3000);
+            }
+
+            document.querySelectorAll('.adicionar-ao-carrinho').forEach(button => {
+                button.addEventListener('click', function () {
+                    const produtoId = parseInt(this.getAttribute('data-produto-id'), 10);
+                    const nome = this.getAttribute('data-produto-nome');
+                    const preco = parseFloat(this.getAttribute('data-produto-preco'));
+                    const imagem = this.getAttribute('data-produto-imagem');
+                    const inputQuantidade = this.closest('form').querySelector('#quantidade');
+                    const quantidade = parseInt(inputQuantidade.value, 10) || 1;
+
+                    const produto = {
+                        produtoId: produtoId,
+                        nome: nome,
+                        preco: preco,
+                        imagem: imagem,
+                        quantidade: quantidade
+                    };
+
+                    adicionarAoCarrinho(produto);
+                });
+            });
+        });
+    </script>
+}

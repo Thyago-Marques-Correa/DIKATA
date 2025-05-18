@@ -1,0 +1,56 @@
+﻿@model ProdutoViewModel
+
+@{
+    ViewData["Title"] = "Detalhe do Produto - " + Model.Nome;
+}
+
+<div class="container py-4">
+    <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+    <hr />
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-md-12">
+            <div class="card shadow-sm rounded-4 p-4">
+                <div class="row align-items-center">
+                    <div class="col-md-5 text-center mb-4 mb-md-0">
+                        <img src="~/uploadImagens/@Model.Imagem"
+                             alt="@Model.Nome"
+                             class="img-fluid rounded-4"
+                             style="max-height: 450px; object-fit: cover;" />
+                    </div>
+
+                    <div class="col-md-7">
+                        <dl class="row">
+                            <dt class="col-sm-4 fw-semibold">Nome</dt>
+                            <dd class="col-sm-8">@Html.DisplayFor(model => model.Nome)</dd>
+
+                            <dt class="col-sm-4 fw-semibold">Descrição</dt>
+                            <dd class="col-sm-8">@Html.DisplayFor(model => model.Descricao)</dd>
+
+                            <dt class="col-sm-4 fw-semibold">Valor</dt>
+                            <dd class="col-sm-8">@Model.Valor.ToString("C")</dd>
+
+                            <dt class="col-sm-4 fw-semibold">Quantidade</dt>
+                            <dd class="col-sm-8">@Html.DisplayFor(model => model.QuantidadeEstoque)</dd>
+
+                            <dt class="col-sm-4 fw-semibold">Data de Cadastro</dt>
+                            <dd class="col-sm-8">@Html.DisplayFor(model => model.DataCadastro)</dd>
+
+                            <dt class="col-sm-4 fw-semibold">Ativo</dt>
+                            <dd class="col-sm-8">@Html.DisplayFor(model => model.Ativo)</dd>
+                        </dl>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a class="btn btn-primary rounded-pill px-4" asp-action="Editar" asp-route-id="@Model.Id">
+                                Editar
+                            </a>
+                            <a class="btn btn-outline-secondary rounded-pill px-4" href="javascript:window.history.back();">
+                                Voltar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

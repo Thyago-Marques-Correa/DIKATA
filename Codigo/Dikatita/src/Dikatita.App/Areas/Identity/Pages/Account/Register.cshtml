@@ -1,0 +1,51 @@
+﻿@page
+@model RegisterModel
+
+@{
+    ViewData["Title"] = "Cadastro";
+}
+
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="card shadow p-4 rounded-3" style="max-width: 400px; width: 100%; background-color: #f6fbf7;">
+        <h2 class="text-center text-success mb-3">Cadastre-se</h2>
+
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Email" class="form-label">E-mail</label>
+                <input asp-for="Input.Email" class="form-control rounded-pill p-2" autocomplete="username" placeholder="Digite seu e-mail" />
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.Password" class="form-label">Senha</label>
+                <input asp-for="Input.Password" class="form-control rounded-pill p-2" autocomplete="new-password" type="password" placeholder="Digite sua senha" />
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Input.ConfirmPassword" class="form-label">Confirmar Senha</label>
+                <input asp-for="Input.ConfirmPassword" class="form-control rounded-pill p-2" autocomplete="new-password" type="password" placeholder="Confirme sua senha" />
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <button id="registerSubmit" type="submit" class="btn w-100 text-white rounded-pill p-2" style="background-color: #2a7c67;">
+                Cadastrar
+            </button>
+
+            <div class="text-center mt-3">
+                <span>Já tem uma conta? </span>
+                <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="text-success text-decoration-none">Entrar</a>
+            </div>
+
+            <div class="text-center mt-3">
+                <a href="javascript:history.back()" class="btn btn-secondary rounded-pill px-4">Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

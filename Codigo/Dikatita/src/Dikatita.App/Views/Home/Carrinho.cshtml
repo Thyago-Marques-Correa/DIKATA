@@ -1,0 +1,193 @@
+﻿@{
+    ViewData["Title"] = "Carrinho de Compras - DIKATATITA";
+}
+
+<div class="container d-flex justify-content-center align-items-center mt-5">
+    <div class="card shadow-sm p-4" style="background-color: #f6faf6; border-radius: 12px; max-width: 600px; width: 100%;">
+        <h2 class="text-center text-success mb-4">Carrinho de Compras</h2>
+
+        <h5 class="mb-3 fw-bold">Dados do Cliente</h5>
+        <form id="dados-cliente-form">
+            <div class="mb-3">
+                <label for="nome" class="form-label">Nome</label>
+                <input type="text" class="form-control rounded-pill" id="nome" placeholder="Seu nome completo" required>
+            </div>
+            <div class="mb-3">
+                <label for="telefone" class="form-label">Telefone</label>
+                <input type="tel" class="form-control rounded-pill" id="telefone" placeholder="Seu número de telefone" required>
+            </div>
+            <div class="mb-3">
+                <label for="cpf" class="form-label">CPF</label>
+                <input type="text" class="form-control rounded-pill" id="cpf" placeholder="Seu CPF" required>
+            </div>
+        </form>
+
+        <div id="tabela-carrinho-wrapper" class="mb-3">
+            <table class="table table-sm table-bordered">
+                <thead class="table-light">
+                    <tr class="text-center">
+                        <th>Imagem</th>
+                        <th>Produto</th>
+                        <th>Qtd.</th>
+                        <th>Unitário</th>
+                        <th>Total</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-carrinho" class="text-center small"></tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-end fw-bold">Total:</td>
+                        <td colspan="2" id="total-carrinho" class="fw-bold">R$ 0,00</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="d-grid mt-3">
+            <button class="btn btn-success rounded-pill py-2 fw-bold" onclick="finalizarCompra()">Finalizar Compra</button>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        function obterCarrinho() {
+            const carrinhoCookie = document.cookie.split('; ').find(row => row.startsWith('carrinho='));
+            if (carrinhoCookie) {
+                return JSON.parse(decodeURIComponent(carrinhoCookie.split('=')[1]));
+            }
+            return [];
+        }
+
+        function salvarCarrinho(carrinho) {
+            const carrinhoSerializado = encodeURIComponent(JSON.stringify(carrinho));
+            document.cookie = `carrinho=${carrinhoSerializado}; path=/; max-age=${60 * 60 * 24 * 7}; Secure`;
+        }
+
+        function carregarCarrinho() {
+            const carrinho = obterCarrinho();
+            const tabela = document.getElementById("tabela-carrinho");
+            tabela.innerHTML = "";
+
+            let totalCarrinho = 0;
+
+            if (carrinho.length === 0) {
+                tabela.innerHTML = "<tr><td colspan='6' class='text-center'>Nenhum item no carrinho.</td></tr>";
+                document.getElementById("total-carrinho").innerText = "R$ 0,00";
+                return;
+            }
+
+            carrinho.forEach(item => {
+                const precoUnitario = item.preco || 0;
+                const totalItem = precoUnitario * item.quantidade;
+                totalCarrinho += totalItem;
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>
+                        <img src="${item.imagem}" alt="${item.nome}" style="width: 150px; height: 150px; object-fit: cover;">
+                    </td>
+                    <td>${item.nome}</td>
+                    <td>
+                        <input type="number" class="form-control form-control-sm" min="1" value="${item.quantidade}"
+                            onchange="atualizarQuantidade(${item.produtoId}, this.value)">
+                    </td>
+                    <td>R$ ${precoUnitario.toFixed(2)}</td>
+                    <td>R$ ${totalItem.toFixed(2)}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="removerDoCarrinho(${item.produtoId})">Remover</button></td>
+                `;
+                tabela.appendChild(row);
+            });
+
+            document.getElementById("total-carrinho").innerText = `R$ ${totalCarrinho.toFixed(2)}`;
+        }
+
+        function removerDoCarrinho(produtoId) {
+            let carrinho = obterCarrinho();
+            carrinho = carrinho.filter(item => item.produtoId !== produtoId);
+            salvarCarrinho(carrinho);
+            carregarCarrinho();
+        }
+
+        function atualizarQuantidade(produtoId, novaQuantidade) {
+            let carrinho = obterCarrinho();
+            const item = carrinho.find(i => i.produtoId === produtoId);
+            if (item) {
+                item.quantidade = parseInt(novaQuantidade);
+                salvarCarrinho(carrinho);
+                carregarCarrinho();
+            }
+        }
+
+        function validarCPF(cpf) {
+            cpf = cpf.replace(/[^\d]+/g, '');
+            if (cpf.length !== 11) return false;
+
+            let soma = 0;
+            let resto;
+            for (let i = 1; i <= 9; i++) {
+                soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+            }
+            resto = (soma * 10) % 11;
+            if (resto === 10 || resto === 11) resto = 0;
+            if (resto !== parseInt(cpf.substring(9, 10))) return false;
+
+            soma = 0;
+            for (let i = 1; i <= 10; i++) {
+                soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+            }
+            resto = (soma * 10) % 11;
+            if (resto === 10 || resto === 11) resto = 0;
+            if (resto !== parseInt(cpf.substring(10, 11))) return false;
+
+            return true;
+        }
+
+        function finalizarCompra() {
+            const form = document.getElementById("dados-cliente-form");
+            if (!form.checkValidity()) {
+                alert("Por favor, preencha todos os campos obrigatórios.");
+                return;
+            }
+
+            const nome = document.getElementById("nome").value;
+            const telefone = document.getElementById("telefone").value;
+            const cpf = document.getElementById("cpf").value;
+            const carrinho = obterCarrinho();
+
+            if (carrinho.length === 0) {
+                alert("Carrinho vazio.");
+                return;
+            }
+
+            let valorTotal = 0;
+            let mensagem = `Olá! 😊 Meu nome é *${nome}*. Seguem meus dados e o pedido:\n\n`;
+            mensagem += `📞 *Telefone:* ${telefone}\n`;
+            mensagem += `🆔 *CPF:* ${cpf}\n\n`;
+            mensagem += `🛍️ *Itens do Carrinho:*\n`;
+
+            carrinho.forEach((item, index) => {
+                const preco = item.preco || 0;
+                const subtotal = preco * item.quantidade;
+                valorTotal += subtotal;
+
+                mensagem += `${index + 1}. *${item.nome}* — Quantidade: ${item.quantidade} — Preço unitário: R$ ${preco.toFixed(2)}\n`;
+            });
+
+            mensagem += `\n💰 *Valor Total:* R$ ${valorTotal.toFixed(2)}`;
+
+            const numeroWhatsApp = "+5503131667070";
+            const url = `https://api.whatsapp.com/send?phone=${numeroWhatsApp}&text=${encodeURIComponent(mensagem)}`;
+            window.open(url, "_blank");
+
+            document.cookie = "carrinho=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+            carregarCarrinho();
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            carregarCarrinho();
+        });
+    </script>
+}

@@ -1,0 +1,57 @@
+@using Microsoft.AspNetCore.Identity
+@model List<Microsoft.AspNetCore.Identity.IdentityRole>
+
+@{
+    ViewBag.Title = "Gerenciar Roles";
+    var userRoles = ViewBag.UserRoles as List<string>;
+    var allRoles = ViewBag.AllRoles as List<IdentityRole>;
+}
+
+@{
+    ViewData["Title"] = "Atribuir Roles";
+}
+
+<div class="container py-4">
+    <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+
+    <div class="card shadow-sm rounded-4 p-4">
+        <form asp-action="UpdateRoles">
+            <input type="hidden" name="userId" value="@ViewBag.UserId" />
+
+            @if (allRoles != null && allRoles.Count > 0)
+            {
+                <div class="row">
+                    @foreach (var role in allRoles)
+                    {
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       name="roles"
+                                       value="@role.Name"
+                                @(userRoles.Contains(role.Name) ? "checked" : "")
+                                       id="role_@role.Id" />
+                                <label class="form-check-label" for="role_@role.Id">
+                                    @role.Name
+                                </label>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="text-muted text-center">Não existem Roles cadastradas!</p>
+            }
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success rounded-pill px-4">
+                    Salvar
+                </button>
+                <a href="javascript:history.back();" class="btn btn-secondary rounded-pill px-4 ms-2">
+                    Voltar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,70 @@
+@model Dikatita.App.Models.MovEstoqueViewModel
+
+@{
+    ViewData["Title"] = "Ajuste de Estoque";
+}
+
+<h1 class="text-center">@ViewData["Title"]</h1>
+
+<hr />
+<br>
+<br>
+<form asp-action="AjusteEstoque">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="container">
+        <div class="row">
+           
+            <div class="col-12 col-sm-6 col-md-4">
+                <div class="form-group">
+                    <label asp-for="ProdutoId" class="control-label"></label>
+                    <select asp-for="ProdutoId" class="form-control" asp-items="@(new SelectList(Model.Produtos, "Id", "Nome"))">
+                        <option value="">-- Selecione um produto --</option>
+                    </select>
+                    <span asp-validation-for="ProdutoId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4">
+                <div class="form-group">
+                    <label asp-for="TipoMovimentacao" class="control-label"></label>
+                    <select asp-for="TipoMovimentacao" class="form-control">
+                        <option value="">-- Selecione o tipo de movimentação --</option>
+                        <option value="Entrada">Entrada</option>
+                        <option value="Saída">Saída</option>
+                    </select>
+                    <span asp-validation-for="TipoMovimentacao" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4">
+                <div class="form-group">
+                    <label asp-for="Quantidade" class="control-label"></label>
+                    <input asp-for="Quantidade" class="form-control" min="1" />
+                    <span asp-validation-for="Quantidade" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-12">
+                <div class="form-group">
+                    <label asp-for="Observacao" class="control-label"></label>
+                    <textarea asp-for="Observacao" class="form-control" rows="4"></textarea>
+                    <span asp-validation-for="Observacao" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-12 text-center">
+                <div class="form-group">
+                    <input type="submit" value="Salvar" class="btn btn-primary" />
+                    <a class="btn btn-info" asp-action="Index">Voltar para a Lista</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

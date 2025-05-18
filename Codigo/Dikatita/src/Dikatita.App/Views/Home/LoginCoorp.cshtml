@@ -1,0 +1,58 @@
+﻿@{
+    ViewData["Title"] = "Login Corporativo - DIKATATITA";
+}
+
+<div class="main-content container mt-4">
+    <div class="login-form">
+        <h3>Login Corporativo</h3>
+        <form id="loginForm">
+            <div class="mb-3">
+                <label for="usuario" class="form-label">Usuário</label>
+                <input type="text" class="form-control" id="usuario" placeholder="Digite seu usuário" required>
+            </div>
+            <div class="mb-3">
+                <label for="senha" class="form-label">Senha</label>
+                <input type="password" class="form-control" id="senha" placeholder="Digite sua senha" required>
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Entrar</button>
+            </div>
+            <div class="text-center mt-3">
+                <a href="/" class="btn btn-secondary text-white text-decoration-none">Voltar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function (event) {
+            event.preventDefault(); 
+
+            const usuario = document.getElementById('usuario').value;
+            const senha = document.getElementById('senha').value;
+
+            try {
+                const response = await fetch('/api/login-corporativo', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ usuario, senha })
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.message || 'Erro ao fazer login. Verifique suas credenciais.');
+                }
+
+                localStorage.setItem("isLoggedIn", "true");
+                alert('Login bem-sucedido!');
+                window.location.href = "/";
+            } catch (error) {
+                console.error('Erro:', error.message);
+                alert(error.message || 'Ocorreu um erro ao processar sua solicitação. Tente novamente mais tarde.');
+            }
+        });
+    </script>
+}

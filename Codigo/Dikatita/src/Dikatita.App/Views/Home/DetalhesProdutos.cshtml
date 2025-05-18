@@ -1,0 +1,82 @@
+﻿@{
+    ViewData["Title"] = "Detalhes do Produto - DIKATATITA";
+}
+
+<div class="main-content container mt-4">
+    <h2 class="text-center mb-4">Detalhes do Produto</h2>
+    <div class="row">
+      
+        <div class="col-md-6 produto-imagem text-center">
+            <img id="produtoImagem" src="" class="img-fluid rounded" alt="Imagem do Produto">
+        </div>
+
+        <div class="col-md-6 produto-info">
+            <h3 id="produtoNome"></h3>
+            <p id="produtoDescricao"></p>
+            <p><strong>Quantidade em estoque:</strong> <span id="produtoQuantidade"></span></p>
+            <p><strong>Quantidade reservada:</strong> <span id="produtoReservado"></span></p>
+            <p class="fw-bold">Preço: R$ <span id="produtoPreco"></span></p>
+
+            <div class="d-flex gap-2">
+                <a href="/" class="btn btn-secondary text-white text-decoration-none">Voltar</a>
+                <button class="btn btn-primary" onclick="adicionarAoCarrinho()">Adicionar ao Carrinho</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        async function carregarProduto() {
+            try {
+                const produtoId = getQueryParam("produto");
+                console.log("ID capturado:", produtoId); 
+                if (!produtoId) throw new Error("ID do produto não especificado!");
+
+                const response = await fetch(`/api/produtos/${produtoId}`);
+                if (!response.ok) throw new Error("Erro ao carregar o produto.");
+
+                const produto = await response.json();
+                console.log("Produto encontrado:", produto); 
+                document.getElementById("produtoNome").innerText = produto.nome;
+                document.getElementById("produtoDescricao").innerText = produto.descricao || "Sem descrição disponível.";
+                document.getElementById("produtoQuantidade").innerText = produto.estoque.disponivel;
+                document.getElementById("produtoReservado").innerText = produto.estoque.reservado || 0;
+                document.getElementById("produtoPreco").innerText = produto.preco.toFixed(2);
+                document.getElementById("produtoImagem").src = `/assets/${produto.imagem}`;
+            } catch (error) {
+                console.error("Erro:", error.message);
+                alert("Erro ao carregar detalhes do produto.");
+                window.location.href = "/";
+            }
+        }
+
+        function adicionarAoCarrinho() {
+            const isLoggedIn = localStorage.getItem("isLoggedIn");
+            if (!isLoggedIn || isLoggedIn !== "true") {
+                alert("Você precisa fazer login para adicionar produtos ao carrinho.");
+                window.location.href = "/Login";
+                return;
+            }
+
+            const nomeProduto = document.getElementById("produtoNome").innerText;
+
+            let carrinho = JSON.parse(localStorage.getItem("carrinho")) || [];
+            const produtoExistente = carrinho.find(item => item.nome === nomeProduto);
+
+            if (produtoExistente) {
+                produtoExistente.quantidade += 1;
+            } else {
+                carrinho.push({ nome: nomeProduto, quantidade: 1 }); 
+            }
+
+            localStorage.setItem("carrinho", JSON.stringify(carrinho)); 
+            alert(`${nomeProduto} adicionado ao carrinho!`);
+            document.addEventListener('DOMContentLoaded', carregarProduto);
+    </script>
+}

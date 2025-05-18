@@ -1,0 +1,29 @@
+﻿@model IEnumerable<ProdutoViewModel>
+
+@{
+    ViewData["Title"] = "Lista de Produtos";
+}
+
+<div class="container py-4">
+    <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+
+    <div class="d-flex justify-content-end mb-3">
+        <a class="btn btn-success rounded-pill px-4" asp-action="Criar">
+            + Novo Produto
+        </a>
+    </div>
+
+    <vc:summary></vc:summary>
+
+    <div class="card shadow-sm rounded-4 p-4">
+        <partial name="_ListaProdutos" />
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}
