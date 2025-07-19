@@ -17,7 +17,8 @@ public class Program
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
         builder.Services.AddDbContext<DikatitaDbContext>(options =>
-        options.UseSqlite(connectionString, b => b.MigrationsAssembly("Dikatita.Data")));
+            options.UseSqlServer(connectionString));
+
 
         // Adicionando o Identity
         builder.Services.AddDefaultIdentity<IdentityUser>(options =>
@@ -33,6 +34,13 @@ public class Program
             options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
         });
 
+        builder.Services.AddSession(options =>
+        {
+            options.IdleTimeout = TimeSpan.FromMinutes(30);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+        });
+
         builder.Services.AddControllersWithViews();
 
         builder.Services.AddAutoMapper(typeof(Program));
@@ -40,6 +48,7 @@ public class Program
         builder.Services.AddScoped<DikatitaDbContext>();
         builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
         builder.Services.AddScoped<IMovEstoqueRepository, MovEstoqueRepository>();
+        builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
 
 
         // Gerando a APP
@@ -49,7 +58,9 @@ public class Program
         app.UseStaticFiles();
 
         app.MapRazorPages();
+        app.UseSession();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapStaticAssets();

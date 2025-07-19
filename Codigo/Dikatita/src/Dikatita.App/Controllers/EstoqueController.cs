@@ -45,7 +45,7 @@ public class EstoqueController : BaseController
     [HttpPost]
     public async Task<IActionResult> AjusteEstoque(MovEstoqueViewModel movEstoqueViewModel)
     {
-        if (!ModelState.IsValid) 
+        if (!ModelState.IsValid)
         {
             movEstoqueViewModel.Produtos = _mapper.Map<IEnumerable<ProdutoViewModel>>(await _produtoRepository.ObterTodos());
             return View(movEstoqueViewModel);

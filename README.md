@@ -18,4 +18,7 @@ O projeto DIKATATITA é uma aplicação web desenvolvida para facilitar a gestã
 
 ## Instruções de utilização
 
-[Assim que a primeira versão do sistema estiver disponível, deverá complementar com as instruções de utilização. Descreva como instalar eventuais dependências e como executar a aplicação.]
+Acessar o link: https://dikatita-d2enc3dfa6e5duf3.canadacentral-01.azurewebsites.net/
+Login: admin@gmail.com
+Senha: Dikatita123@
+

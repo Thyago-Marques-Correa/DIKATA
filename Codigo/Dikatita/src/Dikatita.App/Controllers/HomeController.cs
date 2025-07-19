@@ -2,8 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using Dikatita.App.Models;
 using Dikatita.Business.Interfaces;
 using AutoMapper;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
+using Dikatita.App.ViewModels;
+using Dikatita.Business.Models;
 
 namespace Dikatita.App.Controllers
 {
@@ -12,14 +13,18 @@ namespace Dikatita.App.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IProdutoRepository _produtoRepository;
         private readonly IMapper _mapper;
+        private readonly IPedidoRepository _pedidoRepository;
+        
         public HomeController(
             ILogger<HomeController> logger,
             IProdutoRepository produtoRepository,
-            IMapper mapper)
+            IMapper mapper,
+            IPedidoRepository pedidoRepository)
         {
             _logger = logger;
             _produtoRepository = produtoRepository;
             _mapper = mapper;
+            _pedidoRepository = pedidoRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -36,7 +41,7 @@ namespace Dikatita.App.Controllers
             catch (Exception ex)
             {
         
-                _logger.LogError(ex, "Erro ao carregar produtos na página inicial.");
+                _logger.LogError(ex, "Erro ao carregar produtos na p�gina inicial.");
                 return View("Error");
             }
         }
@@ -93,6 +98,15 @@ namespace Dikatita.App.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> SalvarPedido(PedidoViewModel pedidoViewModel)
+        {
+            if(!ModelState.IsValid) return View(nameof(Index));
+        
+            await _pedidoRepository.Adicionar(_mapper.Map<Pedido>(pedidoViewModel));
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Dikatita.App.Controllers;
 
-[Authorize(Roles = "Admin")]
 [Area("Admin")]
+[Authorize(Roles = "Admin")]
 [Route("produtos/[action]")]
 public class ProdutoController(IProdutoRepository produtoRepository, IConfiguration configuration, IMapper mapper) : BaseController
 {
@@ -68,7 +68,6 @@ public class ProdutoController(IProdutoRepository produtoRepository, IConfigurat
 
         var produtoAtualizacao = await _produtoRepository.ObterPorId(id);
         produtoViewModel.Imagem = produtoAtualizacao.Imagem;
-
         ModelState.Remove(nameof(produtoViewModel.ImagemUpload));
         if (!ModelState.IsValid) return View(produtoViewModel);
 

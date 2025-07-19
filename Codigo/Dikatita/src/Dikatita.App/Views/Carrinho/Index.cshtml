@@ -1,0 +1,49 @@
+﻿@using Microsoft.IdentityModel.Tokens
+@model CarrinhoProdutoViewModel;
+
+@{
+    ViewData["Title"] = "Carrinho de Compras - DIKATATITA";
+}
+
+<div class="main-content container mt-4">
+    <h2 class="text-center mb-4">Carrinho de Compras</h2>
+
+    @await Html.PartialAsync("_ListaProdutosCarrinho", Model.Produtos)
+    <p><strong>Total do Carrinho: @ViewBag.ValorTotal.ToString("C")</strong></p>
+    
+    @if (!Model.Produtos.IsNullOrEmpty())
+    {
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCliente">
+            Fechar Pedido
+        </button>
+    }
+
+    <div class="modal fade" id="modalCliente" tabindex="-1" aria-labelledby="modalClienteLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalClienteLabel">Informações do Cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body" id="conteudoModalCliente">
+                    @await Html.PartialAsync("_FormularioCliente", new Dikatita.App.ViewModels.PedidoViewModel())
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+
+    <script>
+        $('#modalCliente').on('shown.bs.modal', function () {
+            $('#TelefoneCliente').mask('(00) 00000-0000', {
+                placeholder: "(__) _____-____"
+            });
+            $('#CpfCliente').mask('000.000.000-00', {
+                placeholder: "___.___.___-__"
+            });
+        });
+    </script>
+}

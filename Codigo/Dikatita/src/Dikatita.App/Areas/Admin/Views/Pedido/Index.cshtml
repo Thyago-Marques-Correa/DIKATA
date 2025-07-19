@@ -1,0 +1,27 @@
+@model IEnumerable<Dikatita.App.ViewModels.PedidoViewModel>
+
+@{
+    ViewData["Title"] = "Lista de Pedidos";
+}
+
+<div class="container py-4">
+    <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+
+    <vc:summary></vc:summary>
+
+    <div class="card shadow-sm rounded-4 p-4">
+        <partial name="_ListaPedidos" model="Model"/>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.11.5/datatables.min.js"></script>
+    <script src="~/js/administrativo/format-table.js"></script>
+}

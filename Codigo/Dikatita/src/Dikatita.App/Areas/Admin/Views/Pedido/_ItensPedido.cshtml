@@ -1,0 +1,40 @@
+@model Dikatita.App.ViewModels.PedidoViewModel;
+
+<table class="table data-table table-bordered table-hover table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <th>
+            Produto
+        </th>
+        <th>
+            Valor Unitário
+        </th>
+        <th>
+            Quantidade
+        </th>
+        <th>
+            Valor Total
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.Itens)
+    {
+        var valorTotal = item.Quantidade * item.ValorUnitario;
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NomeProduto)
+            </td>
+            <td>
+                @item.ValorUnitario.ToString("C")
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantidade)
+            </td>
+            <td>
+                @valorTotal.ToString("C")
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

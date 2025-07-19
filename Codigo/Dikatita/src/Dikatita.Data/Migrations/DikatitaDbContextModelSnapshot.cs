@@ -17,6 +17,38 @@ namespace Dikatita.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
 
+            modelBuilder.Entity("Dikatita.Business.Models.ItemPedido", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NomeProduto")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid>("PedidoId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ProdutoId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("ValorUnitario")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PedidoId");
+
+                    b.HasIndex("ProdutoId");
+
+                    b.ToTable("ItensPedido", (string)null);
+                });
+
             modelBuilder.Entity("Dikatita.Business.Models.MovEstoque", b =>
                 {
                     b.Property<Guid>("Id")
@@ -46,6 +78,35 @@ namespace Dikatita.Data.Migrations
                     b.HasIndex("ProdutoId");
 
                     b.ToTable("MovEstoque", (string)null);
+                });
+
+            modelBuilder.Entity("Dikatita.Business.Models.Pedido", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CpfCliente")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NomeCliente")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("TelefoneCliente")
+                        .IsRequired()
+                        .HasColumnType("varchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pedidos", (string)null);
                 });
 
             modelBuilder.Entity("Dikatita.Business.Models.Produto", b =>
@@ -223,11 +284,9 @@ namespace Dikatita.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("ProviderDisplayName")
@@ -265,11 +324,9 @@ namespace Dikatita.Data.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("Value")
@@ -278,6 +335,23 @@ namespace Dikatita.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Dikatita.Business.Models.ItemPedido", b =>
+                {
+                    b.HasOne("Dikatita.Business.Models.Pedido", "Pedido")
+                        .WithMany("Itens")
+                        .HasForeignKey("PedidoId")
+                        .IsRequired();
+
+                    b.HasOne("Dikatita.Business.Models.Produto", "Produto")
+                        .WithMany()
+                        .HasForeignKey("ProdutoId")
+                        .IsRequired();
+
+                    b.Navigation("Pedido");
+
+                    b.Navigation("Produto");
                 });
 
             modelBuilder.Entity("Dikatita.Business.Models.MovEstoque", b =>
@@ -333,6 +407,11 @@ namespace Dikatita.Data.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Dikatita.Business.Models.Pedido", b =>
+                {
+                    b.Navigation("Itens");
                 });
 #pragma warning restore 612, 618
         }

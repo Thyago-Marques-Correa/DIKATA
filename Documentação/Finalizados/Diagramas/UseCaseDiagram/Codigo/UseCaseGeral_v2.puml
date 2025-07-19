@@ -1,0 +1,69 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor Cliente
+actor Supervisor
+actor Administrador
+actor "WhatsApp Business" as WhatsApp
+
+Administrador --|> Supervisor
+
+rectangle "Sistema Dikatita" {
+    
+    (Informar Dados) as InformarDados
+    (Buscar Produtos) as BuscarProdutos
+    (Verificar Disponibilidade) as VerificarDisponibilidade
+    (Encomendar Produto) as EncomendarProduto
+    (Adicionar Produtos no Carrinho) as AdicionarCarrinho
+    (Remover Produtos do Carrinho) as RemoverCarrinho
+    (Visualizar Carrinho) as VisualizarCarrinho
+    (Realizar Compra) as RealizarCompra
+    (Gerar Pedido) as GerarPedido
+    (Exportar Catálogo) as ExportarCatalogo
+
+    (Criar Produto) as CriarProduto
+    (Editar Produto) as EditarProduto
+    (Excluir Produto) as ExcluirProduto
+
+    (Criar Supervisor) as CriarSupervisor
+    (Editar Supervisor) as EditarSupervisor
+    (Excluir Supervisor) as ExcluirSupervisor
+
+    (Visualizar Histórico de Alterações) as HistoricoAlteracoes
+    (Visualizar Quantitativo em Estoque) as VerEstoque
+    (Editar Quantitativo em Estoque) as EditarEstoque
+
+    (Visualizar o Balanço Mensal) as BalancoMensal
+
+    Cliente --> InformarDados
+    Cliente --> BuscarProdutos
+    Cliente --> EncomendarProduto
+    Cliente --> AdicionarCarrinho
+    Cliente --> RemoverCarrinho
+    Cliente --> VisualizarCarrinho
+    Cliente --> RealizarCompra
+    Cliente --> ExportarCatalogo
+
+    Administrador --> CriarSupervisor
+    Administrador --> EditarSupervisor
+    Administrador --> ExcluirSupervisor
+    Administrador --> BalancoMensal
+
+    Supervisor --> CriarProduto
+    Supervisor --> EditarProduto
+    Supervisor --> ExcluirProduto
+    Supervisor --> ExportarCatalogo
+    Supervisor --> HistoricoAlteracoes
+    Supervisor --> VerEstoque
+    Supervisor --> EditarEstoque
+
+
+    BuscarProdutos --> VerificarDisponibilidade : <<extend>>
+    EncomendarProduto --> VerificarDisponibilidade : <<include>>
+
+    RealizarCompra --> GerarPedido : <<include>>
+    GerarPedido --> WhatsApp <<include>>
+}
+
+@enduml

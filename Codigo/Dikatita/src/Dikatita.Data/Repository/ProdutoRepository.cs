@@ -44,4 +44,11 @@ public class ProdutoRepository : Repository<Produto>, IProdutoRepository
             .Where(p => p.Nome.ToLower().Contains(nome.ToLower()) && p.Ativo && p.QuantidadeEstoque > 0)
             .ToListAsync();
     }
+    
+    public async Task<IEnumerable<Produto>> ObterPorIds(IEnumerable<Guid> ids)
+    {
+        return await DbSet.AsNoTracking()
+            .Where(p => ids.Contains(p.Id))
+            .ToListAsync();
+    }
 }

@@ -24,8 +24,12 @@ public class ProdutoViewModel
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     public decimal Valor { get; set; }
 
+    [DisplayName("Quantidade do estoque")]
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     public int QuantidadeEstoque { get; set; }
+    
+    [DisplayName("Quantidade do carrinho")]
+    public int QuantidadeCarrinho { get; set; }
 
     [ScaffoldColumn(false)]
     public DateTime DataCadastro { get; set; } = DateTime.Now;

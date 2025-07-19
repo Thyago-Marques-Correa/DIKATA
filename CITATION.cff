@@ -2,29 +2,33 @@ cff-version: 1.0.1
 message: Please cite this software using these metadata.
 title: 
 authors:
-  - family-names: Sobrenome do aluno 1
-    given-names: Nome do aluno 1
-  - family-names: Sobrenome do aluno 2
-    given-names: Nome do aluno 2
-  - family-names: Sobrenome do aluno 3
-    given-names: Nome do aluno 3
-  - family-names: Sobrenome do aluno 4
-    given-names: Nome do aluno 4
-  - family-names: Sobrenome do aluno 5
-    given-names: Nome do aluno 5
-  - family-names: Sobrenome do aluno 6
-    given-names: Nome do aluno 6
-  - name-suffix: Professor
+- family-names: Fernandes de Oliveira
+    given-names: Matheus
+  - family-names: Hoske Aguiar
+    given-names: Matheus
+  - family-names: Almeida Pinheiro
+    given-names: Samuel
+  - family-names: Marques Correa
+    given-names: Thyago
+  - family-names: Alexandre Peters Fonseca
+    given-names: Victor
+  - name-suffix: Professora
     affiliation: PUC Minas
     family-names: Alonso Veloso
     given-names: Eveline
+  - name-suffix: Professora
+    affiliation: PUC Minas
+    family-names: Ribeiro de Souza
+    given-names: Joana Gabriela
   - name-suffix: Professor
     affiliation: PUC Minas
-    family-names: 
-    given-names: 
+    family-names: Lacerda Marques
+    given-names: Ramon
 keywords:
-  - 
-  - 
+  - Sistema Acadêmico
+  - Gestão Educacional
+  - Sistema de Gestão
+  - Dikatita
 repository-code: 
 license: CC-BY-4.0
 version: 1.0.0

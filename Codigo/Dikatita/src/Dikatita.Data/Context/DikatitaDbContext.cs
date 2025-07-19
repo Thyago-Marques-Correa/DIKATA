@@ -11,12 +11,14 @@ public class DikatitaDbContext : IdentityDbContext
 
     public DikatitaDbContext(DbContextOptions options) : base (options)
     {
+        Database.EnsureCreated();
     }
 
-    public DbSet<Produto> Produtos { get; set; }
     public DbSet<MovEstoque> MovEstoque { get; set; }
-
-
+    public DbSet<Pedido> Pedido { get; set; }
+    public DbSet<Produto> Produtos { get; set; }
+    public DbSet<ItemPedido> ItemPedido { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DikatitaDbContext).Assembly);

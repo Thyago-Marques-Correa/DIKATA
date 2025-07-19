@@ -19,7 +19,7 @@
             <th>ID</th>
             <th>Cliente</th>
             <th>Data</th>
-            <th>Status</th>
+            <th>StatusPedido</th>
             <th>Total</th>
             <th>Ações</th>
         </tr>
@@ -90,11 +90,11 @@
         }
 
         async function editarPedido(id) {
-            const novoStatus = prompt("Novo status da compra (Ex.: Finalizado):");
+            const novoStatusPedido = prompt("Novo status da compra (Ex.: Finalizado):");
             const response = await fetch(`/api/compras/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ Status: novoStatus })
+                body: JSON.stringify({ StatusPedido: novoStatusPedido })
             });
             if (response.ok) alert("Pedido atualizado!");
             else alert("Erro ao atualizar o pedido.");

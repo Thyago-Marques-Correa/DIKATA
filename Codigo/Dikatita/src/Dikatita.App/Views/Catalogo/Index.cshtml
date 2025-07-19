@@ -3,10 +3,19 @@
 @{
     ViewData["Title"] = "Catálogo de Produtos";
 }
-
-<h1>@ViewData["Title"]</h1>
-<vc:summary></vc:summary>
 <br />
+
+<div class="input-group-append">
+    <button type="submit" class="btn btn-warning">Gerar Catálogo</button>
+</div>
+<vc:summary></vc:summary>
+
+<div class="d-flex justify-content-end mb-3">
+    <a asp-controller="Catalogo" asp-action="GerarPdfCatalogo" class="btn btn-primary" target="_blank">
+        <i class="fas fa-file-pdf"></i> Exportar Catálogo em PDF
+    </a>
+</div>
+
 <partial name="_ListaProdutos"/>
 
 @section Scripts

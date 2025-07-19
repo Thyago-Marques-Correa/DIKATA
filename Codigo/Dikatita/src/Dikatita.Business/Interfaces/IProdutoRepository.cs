@@ -9,4 +9,5 @@ public interface IProdutoRepository : IRepository<Produto>
 {
     Task AtualizarEstoque(Guid id, int quantidade, string tipoMovimentacao);
     Task<IEnumerable<Produto>> BuscarPorNome(string nome);
+    Task<IEnumerable<Produto>> ObterPorIds(IEnumerable<Guid> ids);
 }

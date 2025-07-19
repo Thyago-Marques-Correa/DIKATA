@@ -1,0 +1,55 @@
+@model IEnumerable<ProdutoViewModel>;
+
+<table class="table data-table table-bordered table-hover table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>
+
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Valor)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.QuantidadeCarrinho)
+            </th>
+            <th>
+                Valor Total
+            </th>
+            <th>
+                Ações
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var valorTotal = item.QuantidadeCarrinho * item.Valor;
+            <tr>
+                <td>
+                    <img src="~/uploadImagens/@item.Imagem" alt="@item.Imagem" style="width: 70px; height: 100px"/>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @item.Valor.ToString("C")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.QuantidadeCarrinho)
+                </td>
+                <td>
+                    @valorTotal.ToString("C")
+                </td>
+                <td>
+                    <form asp-controller="Carrinho" asp-action="RemoverDoCarrinho" method="post">
+                        <input type="hidden" name="id" value="@item.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Remover</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
